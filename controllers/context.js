@@ -9,6 +9,14 @@ contextsRouter.get('/', async (request, response, next) => {
     response.json(contexts)
 })
 
+
+contextsRouter.get('/:id', async (request, response, next) => {
+    console.log(request.params)
+    let context = await Context.findById(request.params.id)
+    response.json(context)
+})
+
+
 contextsRouter.post('/', async (request, response, next) => {
     const body = request.body
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
@@ -41,6 +49,7 @@ contextsRouter.delete('/:id', async (request, response) => {
 
 contextsRouter.put('/:id', async (request, response) => {
     const updatedContext = await Context.findByIdAndUpdate(request.params.id, request.body, { new: true });
+    console.log(updatedContext)
     response.json(updatedContext.toJSON())
 })
 

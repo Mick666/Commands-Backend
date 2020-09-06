@@ -1,7 +1,6 @@
 const commandsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const Command = require('../models/commands')
-const User = require('../models/user')
 
 commandsRouter.get('/', async (request, response, next) => {
     let commands = await Command
