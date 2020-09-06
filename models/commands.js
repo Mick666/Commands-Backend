@@ -2,31 +2,18 @@ const mongoose = require('mongoose')
 
 mongoose.set('useFindAndModify', false)
 
-const blogSchema = mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-        minlength: 5
-    },
-    author: {
+const commandSchema = mongoose.Schema({
+    command: {
         type: String,
         required: true
     },
-    url: {
+    description: {
         type: String,
         required: true
-    },
-    likes: {
-        type: String,
-        default: 0
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
     }
 })
 
-blogSchema.set('toJSON', {
+commandSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
@@ -36,4 +23,4 @@ blogSchema.set('toJSON', {
     }
 })
 
-module.exports = mongoose.model("Blog", blogSchema)
+module.exports = mongoose.model("Command", commandSchema)
