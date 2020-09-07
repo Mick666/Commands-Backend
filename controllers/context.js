@@ -1,7 +1,5 @@
 const contextsRouter = require('express').Router()
-const jwt = require('jsonwebtoken')
 const Context = require('../models/context')
-const User = require('../models/user')
 
 contextsRouter.get('/', async (request, response, next) => {
     let contexts = await Context
@@ -19,12 +17,6 @@ contextsRouter.get('/:id', async (request, response, next) => {
 
 contextsRouter.post('/', async (request, response, next) => {
     const body = request.body
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if (!request.token || !decodedToken.id) {
-        return response.status(401).json({error: 'token missing or invalid'})
-    }
-    const user = await User.findById(decodedToken.id)
 
     const context = new Context({
         context: body.context,
@@ -35,15 +27,8 @@ contextsRouter.post('/', async (request, response, next) => {
 })
 
 contextsRouter.delete('/:id', async (request, response) => {
-    console.log(request.token)
-    if (request.token === null) return response.status(401).json({error: 'Invalid token'})
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    const context = await Context.findById(request.params.id)
-    if (context.user.toString() === decodedToken.id.toString()) {
-        await Context.findByIdAndRemove(request.params.id)
-        return response.status(204).end();
-    } 
-    return response.status(401).json({error: 'Invalid token'})
+    await Context.findByIdAndRemove(request.params.id)
+    return response.status(204).end();
     
 })
 
